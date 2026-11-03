@@ -8,6 +8,7 @@ export const profile = {
   tagline: "Building cloud-native microservices, AI-powered platforms, and modern web applications.",
   github: "https://github.com/njabulombele",
   githubUsername: "njabulombele",
+  linkedin: "https://www.linkedin.com/in/njabulo-mbele-490642225",
   email: "njabulombele97@gmail.com",
   avatar: "https://avatars.githubusercontent.com/u/103996172?v=4",
   location: "South Africa",
@@ -61,7 +62,5 @@ export const skillGroups: { category: string; icon: string; skills: string[] }[]
  */
 export const socials = [
   { label: "GitHub", url: "https://github.com/njabulombele", icon: "github" },
-  // Add more when ready:
-  // { label: "LinkedIn", url: "https://linkedin.com/in/njabulombele", icon: "linkedin" },
-  // { label: "Email", url: "mailto:njabulo.mbele@example.com", icon: "mail" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/njabulo-mbele-490642225", icon: "linkedin" },
 ];
