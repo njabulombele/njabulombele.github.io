@@ -1,0 +1,95 @@
+---
+import { projects, projectCategories } from "../data/projects";
+import ProjectCard from "./ProjectCard.astro";
+
+// Sort: featured first, then by year descending
+const sorted = [...projects].sort((a, b) => {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+  return parseInt(b.year) - parseInt(a.year);
+});
+
+const featured = sorted.filter((p) => p.featured);
+const rest = sorted.filter((p) => !p.featured);
+---
+
+<section id="projects" class="py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="reveal">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+        Projects
+      </p>
+      <h2 class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+        Featured Work
+      </h2>
+      <p class="mt-4 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+        A selection of fullstack projects — from cloud-native microservices to AI-powered platforms. All source code is on GitHub.
+      </p>
+    </div>
+
+    <!-- Filter buttons -->
+    <div class="mt-8 reveal">
+      <div class="flex flex-wrap gap-2" id="project-filters">
+        {projectCategories.map((cat, idx) => (
+          <button
+            class="filter-btn rounded-lg px-4 py-2 text-sm font-semibold transition-all {idx === 0 ? 'bg-accent-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}"
+            data-filter={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Projects grid -->
+    <div id="projects-grid" class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sorted.map((project) => (
+        <div class="project-wrapper reveal" data-category={project.category}>
+          <ProjectCard project={project} featured={project.featured} />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state (shown by JS when no projects match filter) -->
+    <div id="no-projects" class="hidden mt-12 text-center text-slate-500 dark:text-slate-400">
+      <p class="text-lg">No projects in this category yet.</p>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const buttons = document.querySelectorAll(".filter-btn");
+    const wrappers = document.querySelectorAll(".project-wrapper");
+    const noProjects = document.getElementById("no-projects");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+
+        // Update active button styling
+        buttons.forEach((b) => {
+          b.classList.remove("bg-accent-600", "text-white");
+          b.classList.add("bg-slate-100", "dark:bg-slate-800", "text-slate-700", "dark:text-slate-300", "hover:bg-slate-200", "dark:hover:bg-slate-700");
+        });
+        btn.classList.add("bg-accent-600", "text-white");
+        btn.classList.remove("bg-slate-100", "dark:bg-slate-800", "text-slate-700", "dark:text-slate-300", "hover:bg-slate-200", "dark:hover:bg-slate-700");
+
+        // Filter projects
+        let visibleCount = 0;
+        wrappers.forEach((w) => {
+          const cat = w.getAttribute("data-category");
+          if (filter === "All" || cat === filter) {
+            w.classList.remove("hidden");
+            visibleCount++;
+          } else {
+            w.classList.add("hidden");
+          }
+        });
+
+        if (noProjects) {
+          noProjects.classList.toggle("hidden", visibleCount > 0);
+        }
+      });
+    });
+  })();
+</script>
